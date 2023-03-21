@@ -14,6 +14,7 @@ public class TestJDBC {
         PreparedStatement ps = null ;
         ResultSet rs=null ;
         ResultSetMetaData metadata=null ;
+        int i;
 
         try {
             Class.forName(driver);
@@ -22,23 +23,27 @@ public class TestJDBC {
             System.out.println("Connection a la BD a ete charge avec succes ^_^");
             ps=connection.prepareStatement("SELECT * FROM credit");
             rs=ps.executeQuery();
+
             metadata= rs.getMetaData();
+            System.out.printf("---------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            while(rs.next()) {
 
-            while(rs.next()){
+                for ( i = 1; i <= metadata.getColumnCount();i++) {
 
-                System.out.printf(metadata.getColumnName(1)+"\n");
+                    System.out.printf("\t" + metadata.getColumnName(i).toUpperCase() + " : " + rs.getObject(i).toString() + "  \t |");
 
+                }
+                System.out.printf("\n----------------------------------------------------------------------------------------------------------------------------------------------------------- \n");
 
             }
-//            ps.setLong(1,3L);
-//            ps.setDouble(2,30000.0);
+
 
 
         } catch (ClassNotFoundException e) {
             System.err.println("Le driver de MySQL est introuvable");
         }
         catch (SQLException e) {
-            System.err.println("Connection echouee SQL error");
+            System.err.println(e.getMessage());
         }
         finally {
             try {
